@@ -137,7 +137,7 @@ public class WekaInterface {
 
 
     private double getPercentage(double perc, int cut){
-        perc = perc * Math.pow((double)10, cut+2);
+        perc = perc * Math.pow(10, (double)cut+2);
         perc = Math.floor(perc);
         perc = perc / Math.pow(10, cut);
         return perc;
