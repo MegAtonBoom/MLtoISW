@@ -1,4 +1,7 @@
+package main;
+
 import com.opencsv.CSVWriter;
+import main.AnalysisRow;
 import utils.AttributeSelectionType;
 import utils.ClassifierType;
 import utils.SamplingType;
@@ -34,8 +37,8 @@ public class WekaInterface {
     private String projectName;
     private String projectFolder;
     private String outputFolder;
-    private String training="training";
-    private String testing="testing";
+    private String trainingString="training";
+    private String testingString="testing";
     private String arff=".arff";
     private ClassifierType classifier;
     private SamplingType sampling;
@@ -53,7 +56,6 @@ public class WekaInterface {
 
     public void executeRun() throws Exception {
 
-        if(this.classifier==null||this.sensitivity==null||this.sampling==null||this.attributeSelection==null) throw new Exception();
         DataSource source1;
         DataSource source2;
         AnalysisRow row;
@@ -65,9 +67,9 @@ public class WekaInterface {
 
 
         do {
-            source1 = new DataSource(this.projectFolder+this.training+counter+this.arff);
+            source1 = new DataSource(this.projectFolder+this.trainingString+counter+this.arff);
             Instances training = source1.getDataSet();
-            source2 = new DataSource(this.projectFolder+this.testing+counter+this.arff);
+            source2 = new DataSource(this.projectFolder+this.testingString+counter+this.arff);
             Instances testing = source2.getDataSet();
 
             if((traingBuggy=getNumBuggy(training))==0) {
@@ -96,7 +98,7 @@ public class WekaInterface {
             row=getRow(eval, counter, training, testing, traingBuggy, testBuggy);
             outputRow(row, false);
             counter++;
-        }while(new File(this.projectFolder+this.training+counter+this.arff).isFile());
+        }while(new File(this.projectFolder+this.trainingString+counter+this.arff).isFile());
 
     }
 
@@ -145,9 +147,9 @@ public class WekaInterface {
     private int getNumBuggy(Instances insts){
         int num=0;
 
-        Enumeration instEnum = insts.enumerateInstances();
+        Enumeration<Instance> instEnum = insts.enumerateInstances();
         while (instEnum.hasMoreElements()) {
-            Instance inst = (Instance) instEnum.nextElement();
+            Instance inst = instEnum.nextElement();
             if(inst.stringValue(insts.numAttributes()-1).equals("Yes")) num++;
         }
 
@@ -281,11 +283,14 @@ public class WekaInterface {
                 //set the algorithm to search backward
                 search1.setSearchBackwards(true);
                 filter.setSearch(search1);
+                break;
             case FORWARDSEARCH:
                 GreedyStepwise search2 = new GreedyStepwise();
                 //set the algorithm to search backward
                 search2.setSearchBackwards(false);
                 filter.setSearch(search2);
+                break;
+            default: return null;
         }
         //create evaluator and search algorithm objects
         CfsSubsetEval eval = new CfsSubsetEval();
@@ -305,8 +310,7 @@ public class WekaInterface {
         filteredTraining.setClassIndex(filteredTraining.numAttributes()-1);
         Instances filteredTesting = Filter.useFilter(testing, filter);
         filteredTesting.setClassIndex(filteredTesting.numAttributes() - 1);
-        Instances[] inst=new Instances[]{filteredTraining,filteredTesting};
-        return inst;
+        return new Instances[]{filteredTraining,filteredTesting};
 
     }
 

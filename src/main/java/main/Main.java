@@ -1,3 +1,5 @@
+package main;
+
 import utils.AttributeSelectionType;
 import utils.ClassifierType;
 import utils.SamplingType;
@@ -8,24 +10,24 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         String folder="C:\\Users\\39320\\Desktop\\Corsi\\isw2\\data\\progetto\\";
-        WekaInterface Analyser = new WekaInterface(folder+"bk\\", folder+"output", "BOOKKEEPER");
-        callForAnyClassifType(Analyser);
+        WekaInterface analyser = new WekaInterface(folder+"bk\\", folder+"output", "BOOKKEEPER");
+        callForAnyClassifType(analyser);
 
-        Analyser.setProjectFolder(folder+"storm\\");
-        Analyser.setProjectName("STORM");
-        callForAnyClassifType(Analyser);
+        analyser.setProjectFolder(folder+"storm\\");
+        analyser.setProjectName("STORM");
+        callForAnyClassifType(analyser);
 
     }
 
-    private static void callForAnyClassifType(WekaInterface Analyser) throws Exception {
-        Analyser.setClassifier(ClassifierType.RANDOMFOREST);
-        callerClassif(Analyser);
+    private static void callForAnyClassifType(WekaInterface analyser) throws Exception {
+        analyser.setClassifier(ClassifierType.RANDOMFOREST);
+        callerClassif(analyser);
 
-        Analyser.setClassifier(ClassifierType.NAIVEBAYES);
-        callerClassif(Analyser);
+        analyser.setClassifier(ClassifierType.NAIVEBAYES);
+        callerClassif(analyser);
 
-        Analyser.setClassifier(ClassifierType.IBK);
-        callerClassif(Analyser);
+        analyser.setClassifier(ClassifierType.IBK);
+        callerClassif(analyser);
     }
 
     private static void callerClassif(WekaInterface wi) throws Exception {
