@@ -1,7 +1,6 @@
 package main;
 
 import com.opencsv.CSVWriter;
-import main.AnalysisRow;
 import utils.AttributeSelectionType;
 import utils.ClassifierType;
 import utils.SamplingType;
@@ -290,7 +289,7 @@ public class WekaInterface {
                 search2.setSearchBackwards(false);
                 filter.setSearch(search2);
                 break;
-            default: return null;
+            default: return new Instances[]{};
         }
         //create evaluator and search algorithm objects
         CfsSubsetEval eval = new CfsSubsetEval();
